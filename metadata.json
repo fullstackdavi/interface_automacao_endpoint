@@ -1,0 +1,5 @@
+{
+  "name": "WhatsApp Agent Frontend",
+  "description": "A WhatsApp-like frontend interface to communicate with an external agent via send and receive endpoints.",
+  "requestFramePermissions": []
+}
