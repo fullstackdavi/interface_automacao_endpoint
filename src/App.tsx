@@ -46,22 +46,36 @@ export default function App() {
         const data = await res.json();
         
         setMessages(prev => {
+          // Garante que temos um array para trabalhar, lidando com diferentes formatos de resposta
+          let messagesArray: any[] = [];
+          if (Array.isArray(data)) {
+            messagesArray = data;
+          } else if (data && Array.isArray(data.messages)) {
+            messagesArray = data.messages;
+          } else if (data && Array.isArray(data.data)) {
+            messagesArray = data.data;
+          } else {
+            console.warn("Formato de dados inesperado recebido do servidor:", data);
+            return prev; // Mantém as mensagens atuais se o formato for desconhecido
+          }
+
           // Se recebemos novas mensagens do agente, paramos de mostrar "digitando..."
-          if (prev.length > 0 && data.length > prev.length) {
-            const lastMsg = data[data.length - 1];
+          if (prev.length > 0 && messagesArray.length > prev.length) {
+            const lastMsg = messagesArray[messagesArray.length - 1];
             if (lastMsg.sender === 'agent') {
               setIsTyping(false);
             }
           }
           
-          return data.map((m: any) => ({
+          return messagesArray.map((m: any, index: number) => ({
             ...m,
-            timestamp: new Date(m.timestamp)
+            id: m.id || m._id || `msg-${Date.now()}-${index}`, // Garante que sempre haverá um ID único
+            timestamp: new Date(m.timestamp || new Date())
           }));
         });
       }
     } catch (error) {
-      console.error("Erro ao buscar mensagens:", error);
+      console.error("Erro ao buscar mensagens (verifique o CORS do seu backend no Render):", error);
     }
   };
 
