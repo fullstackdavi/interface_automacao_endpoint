@@ -27,8 +27,9 @@ export default function App() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Configuração dos endpoints
-  const SEND_ENDPOINT = '/api/send';
-  const RECEIVE_ENDPOINT = '/api/receive';
+  const BASE_URL = 'https://backend-automacao-tfxu.onrender.com';
+  const SEND_ENDPOINT = `${BASE_URL}/api/send`;
+  const RECEIVE_ENDPOINT = `${BASE_URL}/api/receive`;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
